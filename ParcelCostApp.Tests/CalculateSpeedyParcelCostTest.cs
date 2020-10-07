@@ -8,22 +8,23 @@ using Xunit;
 
 namespace ParcelCostApp.Tests
 { 
-    public class CalculateParcelCostTest
+    public class CalculateSpeedyParcelCostTest
     {
         [Fact]
-        public void Test_ParcelCost_IsReturnedCorrectly_WhenNoItemsAreProvided()
+        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenNoItemsAreProvided()
         {
             IParcelItemList list = new ParcelItemList();
 
-            var calculation = new ParcelCostCalculation();
+            var calculation = new SpeedyParcelCostCalculation();
             var result = calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == 0);
             Assert.True(result.totalCost == 0);
+            Assert.True(result.speedyShippingCost == 0);
         }
 
         [Fact]
-        public void Test_ParcelCost_IsReturnedCorrectly_WhenInvalidDimensionIsProvided()
+        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenInvalidDimensionIsProvided()
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
@@ -31,19 +32,22 @@ namespace ParcelCostApp.Tests
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
+            var calculation = new SpeedyParcelCostCalculation();
             var result = calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == 0);
             Assert.True(result.totalCost == 0);
+            Assert.True(result.speedyShippingCost == 0);
         }
 
+
         [Theory]
-        [InlineData(5, 3)]
-        [InlineData(24, 8)]
-        [InlineData(78, 15)]
-        [InlineData(1888, 25)]
-        public void Test_ParcelCost_IsReturnedCorrectly_WhenValidDimensionIsProvided(int dimension, double expectedCost)
+        [InlineData(5, 6, 3)]
+        [InlineData(24, 16, 8)]
+        [InlineData(78, 30, 15)]
+        [InlineData(1888, 50, 25)]
+        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenValidDimensionIsProvided(
+            int dimension, double expectedCost, double expectedShippingCost)
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
@@ -51,15 +55,16 @@ namespace ParcelCostApp.Tests
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
+            var calculation = new SpeedyParcelCostCalculation();
             var result = calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == 1);
             Assert.True(result.totalCost == expectedCost);
+            Assert.True(result.speedyShippingCost == expectedShippingCost);
         }
 
         [Fact]
-        public void Test_ParcelCost_IsReturnedCorrectly_WhenMultipleValidDimensionAreProvided()
+        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenMultipleValidDimensionAreProvided()
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
@@ -70,16 +75,17 @@ namespace ParcelCostApp.Tests
                 TestUtilities.GenerateParcelItem(-100, "TestItem5")
             };
 
-            var expectedCost = 51;
+            var expectedOrderCost = 51;
             var expectedCount = 4;
 
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
+            var calculation = new SpeedyParcelCostCalculation();
             var result = calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == expectedCount);
-            Assert.True(result.totalCost == expectedCost);
+            Assert.True(result.totalCost == expectedOrderCost * 2);
+            Assert.True(result.speedyShippingCost == expectedOrderCost);
         }
     }
 }

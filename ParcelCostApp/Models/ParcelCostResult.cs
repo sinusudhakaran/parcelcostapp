@@ -9,11 +9,6 @@ namespace ParcelCostApp.Models
         public IEnumerable<IParcelItem> parcels { get; set; } = new List<IParcelItem>();
         public double totalCost { get; set; } = 0;
 
-        public void AddParcels()
-        {
-
-        }
-
         public void CalculateTotalCost()
         {
             parcels.ToList().ForEach(parcel =>

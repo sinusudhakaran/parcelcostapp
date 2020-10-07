@@ -8,6 +8,5 @@ namespace ParcelCostApp.Interfaces
         double totalCost { get; set; }
 
         void CalculateTotalCost();
-        void AddParcels();
     }
 }

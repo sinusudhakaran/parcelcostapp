@@ -23,12 +23,11 @@ namespace ParcelCostApp
             return validList;
         }
 
-        public ParcelCostResult CalculateCost(IParcelItemList list)
+        public virtual ParcelCostResult CalculateCost(IParcelItemList list)
         {
             var validList = Validate(list);
 
             ParcelCostResult result = new ParcelCostResult() { parcels = validList.parcels };
-
             result.CalculateTotalCost();
 
             return result;
