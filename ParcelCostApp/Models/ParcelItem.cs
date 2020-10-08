@@ -1,4 +1,5 @@
-﻿using ParcelCostApp.Enums;
+﻿using ParcelCostApp.Constants;
+using ParcelCostApp.Enums;
 using ParcelCostApp.Interfaces;
 
 namespace ParcelCostApp.Models
@@ -9,14 +10,18 @@ namespace ParcelCostApp.Models
         public int dimension { get; set; }
         public ParcelTypeEnum parcelType { get; set; }
         public double cost { get; set; }
+        public double weight { get; set; }
 
         public void CalculateCost()
         {
             ParcelTypeEnum parcelType = ParcelType.getParcelType(dimension);
             var parcelSizes = new ParcelSizes();
-
             var size = parcelSizes.getParcelSize(parcelType);
-            cost = (size != null) ? size.cost : cost;
+  
+            if (size != null)
+            {
+                cost = size.cost + System.Math.Max(weight - size.weightLimit, 0) * ParcelTypeConstants.OverWeightCost;
+            }
         }
     }
 }

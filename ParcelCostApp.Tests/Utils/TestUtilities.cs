@@ -1,18 +1,16 @@
 ﻿using ParcelCostApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ParcelCostApp.Tests.Utils
 {
     public static class TestUtilities
     {
-        public static ParcelItem GenerateParcelItem(int dimension, string name)
+        public static ParcelItem GenerateParcelItem(int dimension, string name, double weight = 0)
         {
             return new ParcelItem
             {
                 dimension = dimension,
-                name = name
+                name = name,
+                weight = weight
             };
         }
 

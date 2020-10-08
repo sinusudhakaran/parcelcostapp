@@ -8,6 +8,7 @@ namespace ParcelCostApp.Interfaces
         int dimension { get; set; }
         ParcelTypeEnum parcelType { get; set; }
         double cost { get; set; }
+        double weight { get; set; }
 
         void CalculateCost();
     }

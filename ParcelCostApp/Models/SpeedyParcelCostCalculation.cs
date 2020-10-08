@@ -7,7 +7,7 @@ namespace ParcelCostApp
     {
         public double speedyShippingCost { get; set; }
 
-        public new SpeedyParcelCostResult CalculateCost(IParcelItemList list)
+        public override ParcelCostResult CalculateCost(IParcelItemList list)
         {
             SpeedyParcelCostResult result = new SpeedyParcelCostResult();
             var validParcelCost = base.CalculateCost(list);

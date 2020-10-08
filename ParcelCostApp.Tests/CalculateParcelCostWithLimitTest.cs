@@ -1,63 +1,53 @@
 using ParcelCostApp.Interfaces;
 using ParcelCostApp.Models;
 using ParcelCostApp.Tests.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
 namespace ParcelCostApp.Tests
 { 
-    public class CalculateSpeedyParcelCostTest
+    public class CalculateParcelCostTestWithLimit
     {
         [Fact]
-        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenNoItemsAreProvided()
-        {
-            IParcelItemList list = new ParcelItemList();
-
-            var calculation = new SpeedyParcelCostCalculation();
-            SpeedyParcelCostResult result = (SpeedyParcelCostResult)calculation.CalculateCost(list);
-
-            Assert.True(result.parcels.ToList().Count == 0);
-            Assert.True(result.totalCost == 0);
-            Assert.True(result.speedyShippingCost == 0);
-        }
-
-        [Fact]
-        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenInvalidDimensionIsProvided()
+        public void Test_ParcelCostWithWeightLimit_IsReturnedCorrectly_WhenInvalidDimensionAndWeightIsProvided()
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
-                TestUtilities.GenerateParcelItem(-100, "TestItem5")
+                TestUtilities.GenerateParcelItem(-100, "TestItem5", 100)
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
             var calculation = new SpeedyParcelCostCalculation();
-            //var result = calculation.CalculateCost(list);
             SpeedyParcelCostResult result = (SpeedyParcelCostResult)calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == 0);
             Assert.True(result.totalCost == 0);
             Assert.True(result.speedyShippingCost == 0);
         }
-
 
         [Theory]
-        [InlineData(5, 6, 3)]
-        [InlineData(24, 16, 8)]
-        [InlineData(78, 30, 15)]
-        [InlineData(1888, 50, 25)]
-        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenValidDimensionIsProvided(
-            int dimension, double expectedCost, double expectedShippingCost)
+        //Below weight limit
+        [InlineData(5, 0, 6, 3)]
+        [InlineData(24, 2, 16, 8)]
+        [InlineData(78, 5, 30, 15)]
+        [InlineData(1888, 8, 50, 25)]
+        
+        //Above weight limit
+        [InlineData(5, 3, 14, 7)]
+        [InlineData(24, 5, 24, 12)] 
+        [InlineData(78, 8, 38, 19)]
+        [InlineData(1888, 12, 58, 29)]
+        public void Test_ParcelCostWithWeightLimit_IsReturnedCorrectly_WhenValidDimensionAndWeightIsProvided(
+            int dimension, double weight, double expectedCost, double expectedShippingCost)
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
-                TestUtilities.GenerateParcelItem(dimension, "TestItem")
+                TestUtilities.GenerateParcelItem(dimension, "TestItem", weight)
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
             var calculation = new SpeedyParcelCostCalculation();
-            //            var result = calculation.CalculateCost(list);
             SpeedyParcelCostResult result = (SpeedyParcelCostResult)calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == 1);
@@ -66,24 +56,26 @@ namespace ParcelCostApp.Tests
         }
 
         [Fact]
-        public void Test_SpeedyParcelCost_IsReturnedCorrectly_WhenMultipleValidDimensionAreProvided()
+        public void Test_ParcelCostWithWeightLimit_IsReturnedCorrectly_WhenMultipleValidDimensionAreProvided()
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
-                TestUtilities.GenerateParcelItem(6, "TestItem1"),
-                TestUtilities.GenerateParcelItem(24, "TestItem2"),
-                TestUtilities.GenerateParcelItem(75, "TestItem3"),
-                TestUtilities.GenerateParcelItem(500, "TestItem4"),
-                TestUtilities.GenerateParcelItem(-100, "TestItem5")
+                TestUtilities.GenerateParcelItem(5, "TestItem1", 0),
+                TestUtilities.GenerateParcelItem(5, "TestItem2", 3),
+                TestUtilities.GenerateParcelItem(24, "TestItem3", 2),
+                TestUtilities.GenerateParcelItem(24, "TestItem4", 5),
+                TestUtilities.GenerateParcelItem(78, "TestItem5", 5),
+                TestUtilities.GenerateParcelItem(78, "TestItem6", 8),
+                TestUtilities.GenerateParcelItem(1888, "TestItem7", 8),
+                TestUtilities.GenerateParcelItem(1888, "TestItem8", 12),
+                TestUtilities.GenerateParcelItem(-100, "TestItem9", 10)
             };
-
-            var expectedOrderCost = 51;
-            var expectedCount = 4;
+            var expectedOrderCost = 118;
+            var expectedCount = 8;
 
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
             var calculation = new SpeedyParcelCostCalculation();
-            //            var result = calculation.CalculateCost(list);
             SpeedyParcelCostResult result = (SpeedyParcelCostResult)calculation.CalculateCost(list);
 
             Assert.True(result.parcels.ToList().Count == expectedCount);
