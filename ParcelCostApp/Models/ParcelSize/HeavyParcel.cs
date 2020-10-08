@@ -3,19 +3,19 @@ using ParcelCostApp.Interfaces;
 
 namespace ParcelCostApp.Models.ParcelSize
 {
-    public class LargeParcel : IParcelType
+    public class HeavyParcel : IParcelType
     {
         public ParcelTypeEnum parcelType { get; set; }
         public double cost { get; set; }
         public double weightLimit { get; set; }
         public double overLimitCost { get; set; }
 
-        public LargeParcel()
+        public HeavyParcel()
         {
-            parcelType = ParcelTypeEnum.Large;
-            cost = 15.0;
-            weightLimit = 6;
-            overLimitCost = 2;
+            parcelType = ParcelTypeEnum.Heavy;
+            cost = 50.0;
+            weightLimit = 50;
+            overLimitCost = 1;
         }
     }
 }

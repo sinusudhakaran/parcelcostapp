@@ -38,6 +38,9 @@ namespace ParcelCostApp.Tests
         [InlineData(24, 5, 24, 12)] 
         [InlineData(78, 8, 38, 19)]
         [InlineData(1888, 12, 58, 29)]
+
+        //Heavy Parcel Type
+        [InlineData(1888, 100, 200, 100)] 
         public void Test_ParcelCostWithWeightLimit_IsReturnedCorrectly_WhenValidDimensionAndWeightIsProvided(
             int dimension, double weight, double expectedCost, double expectedShippingCost)
         {

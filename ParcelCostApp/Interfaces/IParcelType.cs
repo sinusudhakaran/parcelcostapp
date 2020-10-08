@@ -7,5 +7,6 @@ namespace ParcelCostApp.Interfaces
         ParcelTypeEnum parcelType { get; set; }
         double cost { get; set; }
         double weightLimit { get; set; }
+        double overLimitCost { get; set; }
     }
 }

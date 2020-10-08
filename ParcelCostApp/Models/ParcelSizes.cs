@@ -16,7 +16,8 @@ namespace ParcelCostApp
                 new SmallParcel(),
                 new MediumParcel(),
                 new LargeParcel(),
-                new XLargeParcel()
+                new XLargeParcel(),
+                new HeavyParcel()
             };
         }
  
