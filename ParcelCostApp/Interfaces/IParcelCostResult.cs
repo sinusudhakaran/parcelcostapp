@@ -6,7 +6,5 @@ namespace ParcelCostApp.Interfaces
     {
         IEnumerable<IParcelItem> parcels { get; set; }
         double totalCost { get; set; }
-
-        void CalculateTotalCost();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ParcelCostApp.Enums;
 
-namespace ParcelCostApp
+namespace ParcelCostApp.Models
 {
     public static class ParcelType
     {

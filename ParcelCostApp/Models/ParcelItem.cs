@@ -10,10 +10,11 @@ namespace ParcelCostApp.Models
         public ParcelTypeEnum parcelType { get; set; }
         public double cost { get; set; }
         public double weight { get; set; }
+        public double discount { get; set; }
 
         public void CalculateCost()
         {
-            ParcelTypeEnum parcelType = ParcelType.getParcelType(dimension, weight);
+            parcelType = ParcelType.getParcelType(dimension, weight);
             var parcelSizes = new ParcelSizes();
             var size = parcelSizes.getParcelSize(parcelType);
   

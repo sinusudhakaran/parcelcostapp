@@ -1,7 +1,7 @@
 using ParcelCostApp.Interfaces;
 using ParcelCostApp.Models;
+using ParcelCostApp.Models.Discount;
 using ParcelCostApp.Tests.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -10,13 +10,21 @@ namespace ParcelCostApp.Tests
 { 
     public class CalculateParcelCostTest
     {
+        IDiscountList _discountList = new DiscountList();
+        IDiscountCalculation _discountCalculation;
+
+        public CalculateParcelCostTest()
+        {
+            _discountCalculation = new DiscountCalculation(_discountList);
+        }
+
         [Fact]
         public void Test_ParcelCost_IsReturnedCorrectly_WhenNoItemsAreProvided()
         {
             IParcelItemList list = new ParcelItemList();
 
-            var calculation = new ParcelCostCalculation();
-            var result = calculation.CalculateCost(list);
+            var calculation = new ParcelCostCalculation(list, _discountCalculation);
+            var result = calculation.CalculateCost();
 
             Assert.True(result.parcels.ToList().Count == 0);
             Assert.True(result.totalCost == 0);
@@ -31,19 +39,28 @@ namespace ParcelCostApp.Tests
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
-            var result = calculation.CalculateCost(list);
+            var calculation = new ParcelCostCalculation(list, _discountCalculation);
+            var result = calculation.CalculateCost();
 
             Assert.True(result.parcels.ToList().Count == 0);
             Assert.True(result.totalCost == 0);
         }
 
         [Theory]
-        [InlineData(5, 3)]
-        [InlineData(24, 8)]
-        [InlineData(78, 15)]
-        [InlineData(1888, 25)]
-        public void Test_ParcelCost_IsReturnedCorrectly_WhenValidDimensionIsProvided(int dimension, double expectedCost)
+        [InlineData(0, 0, 0)]
+        [InlineData(5, 3, 1)]
+        [InlineData(9, 3, 1)]
+        [InlineData(10, 8, 1)]
+        [InlineData(11, 8, 1)]
+        [InlineData(24, 8, 1)]
+        [InlineData(49, 8, 1)]
+        [InlineData(50, 15, 1)]
+        [InlineData(78, 15, 1)]
+        [InlineData(99, 15, 1)]
+        [InlineData(100, 25, 1)]
+        [InlineData(1888, 25, 1)]
+        public void Test_ParcelCost_IsReturnedCorrectly_WhenValidDimensionIsProvided
+            (int dimension, double expectedCost, int expectedCount)
         {
             IEnumerable<IParcelItem> parcelItems = new List<IParcelItem>()
             {
@@ -51,10 +68,10 @@ namespace ParcelCostApp.Tests
             };
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
-            var result = calculation.CalculateCost(list);
+            var calculation = new ParcelCostCalculation(list, _discountCalculation);
+            var result = calculation.CalculateCost();
 
-            Assert.True(result.parcels.ToList().Count == 1);
+            Assert.True(result.parcels.ToList().Count == expectedCount);
             Assert.True(result.totalCost == expectedCost);
         }
 
@@ -75,8 +92,8 @@ namespace ParcelCostApp.Tests
 
             IParcelItemList list = new ParcelItemList() { parcels = parcelItems };
 
-            var calculation = new ParcelCostCalculation();
-            var result = calculation.CalculateCost(list);
+            var calculation = new ParcelCostCalculation(list, _discountCalculation);
+            var result = calculation.CalculateCost();
 
             Assert.True(result.parcels.ToList().Count == expectedCount);
             Assert.True(result.totalCost == expectedCost);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ParcelCostApp.Interfaces;
 using ParcelCostApp.Models.ParcelSize;
 
-namespace ParcelCostApp
+namespace ParcelCostApp.Models
 {
     public class ParcelSizes
     {

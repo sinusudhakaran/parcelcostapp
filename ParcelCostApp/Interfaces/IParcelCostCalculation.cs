@@ -4,6 +4,6 @@ namespace ParcelCostApp.Interfaces
 {
     public interface IParcelCostCalculation
     {
-        ParcelCostResult CalculateCost(IParcelItemList list);
+        ParcelCostResult CalculateCost();
     }
 }
